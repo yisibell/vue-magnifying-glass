@@ -2,6 +2,10 @@
 
 基于vue的放大镜组件
 
+## doc
+
+<a href="https://hongwenqing.com">文档</a>
+
 ## Project setup
 ```
 npm install
