@@ -1,11 +1,12 @@
 <template>
-  <div class="magnifying-glass" ref="magnifying">
-    <div ref="smallBox" class="small" @mouseover="maskControl" @mouseout="maskControl" @mousemove="handleMousemove">
-      <img :src="smallUrl" width="350" alt=""/>
-      <div ref="mask" class="mask" v-show="showMask"></div>
+  <div class="magnifying-glass" :style="smallboxstyle" ref="magnifying">
+    <div ref="smallBox" class="small" :style="smallboxstyle"
+      @mouseover="maskControl" @mouseout="maskControl" @mousemove="handleMousemove">
+      <img :src="smallUrl" :width="smallSize" :height="smallSize" alt="img is missing"/>
+      <div ref="mask" class="mask" :style="maskstyle" v-show="showMask"></div>
     </div>
-    <div ref="bigBox" class="big" v-show="showMask">
-      <img ref="bigImg" :src="bigUrl" width="800" alt=""/>
+    <div ref="bigBox" class="big" :style="bigboxstyle" v-show="showMask">
+      <img ref="bigImg" :src="bigUrl" :width="bigSize" :height="bigSize" alt="img is missing"/>
     </div>
   </div>
 </template>
@@ -17,16 +18,58 @@ export default {
   props: {
     smallUrl: {  //小图地址
       type: String,
+      required: true,
       default: ""
     },
     bigUrl: {  //大图地址
       type: String,
+      required: true,
       default: ""
+    },
+    smallSize: {  //小图片大小
+      type: Number,
+      default: 350
+    },
+    bigSize: {  //大图片大小
+      type: Number,
+      default: 800
+    },
+    maskColor: {  //移动遮罩颜色值
+      type: String,
+      default: "rgba(255, 255, 0, 0.4)"
+    },
+    gap: {  //小图与大图之间间隔
+      type: Number,
+      default: 10
     }
   },
   data(){
     return {
       showMask: false
+    }
+  },
+  computed: {
+    smallboxstyle(){
+      return {
+        width: this.smallSize + 'px',
+        height: this.smallSize + 'px'
+      }
+    },
+    bigboxstyle(){
+      var size = (this.bigSize / 2) + 'px';
+      return {
+        width: size,
+        height: size,
+        left: (this.smallSize + this.gap) + 'px'
+      }
+    },
+    maskstyle(){
+      var size = (this.smallSize / 2) + 'px';
+      return {
+        width: size,
+        height: size,
+        'background-color': this.maskColor
+      }
     }
   },
   methods: {
@@ -77,23 +120,15 @@ export default {
 <style lang="scss" scoped>
 
   .magnifying-glass {
-    width: 350px;
-    height: 350px;
-    margin: 100px;
     border: 1px solid #ccc;
     position: relative;
-
     img{
       vertical-align: top;
     }
 
     .small {
       position: relative;
-
       .mask {
-        width: 175px;
-        height: 175px;
-        background: rgba(255, 255, 0, 0.4);
         position: absolute;
         top: 0;
         left: 0;
@@ -102,18 +137,15 @@ export default {
     }
     
     .big {
-      width: 400px;
-      height: 400px;
       position: absolute;
       top: 0;
-      left: 360px;
       border: 1px solid #ccc;
       overflow: hidden;
-     
       img{
         position: absolute;
       }
     }
+
   }
 
 
